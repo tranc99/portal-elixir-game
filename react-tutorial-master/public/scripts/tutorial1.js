@@ -51,7 +51,6 @@ var CommentForm = React.createClass({
     this.setState({text: e.target.value});
   },
   handleSubmit: function(e) {
-    alert("submitting ahaha");
     e.preventDefault();
     var author = this.state.author.trim();
     var text = this.state.text.trim();
@@ -89,17 +88,24 @@ var CommentBox = React.createClass({
     });
   },
   handleCommentSubmit: function(data) {
+
+    // optimistic updates
+    var comments = this.state.data;
+    data.id = Date.now();
+    var newComments = comments.concat([data]);
+    this.setState({data: newComments});
     $.ajax({
       url: this.props.url,
       dataType: 'json',
       type: 'POST',
       data: data,
-      success: function(data) {
+      success: function(newdata) {
         console.log("wawaweewa!");
-        console.log(data);
-        this.setState({data: data});
+        console.log(newdata);
+        this.setState({data: newdata});
       }.bind(this),
       error: function(xhr, status, err) {
+        this.setState({data: comments});
         console.error(this.props.url, status, err.toString());
       }.bind(this)
 
@@ -115,7 +121,7 @@ var CommentBox = React.createClass({
   render: function() {
     return (
       <div className="commentBox">
-        Hello, world! I am a CommentBox.
+
         <h1>Comments</h1>
         <CommentList data={this.state.data} />
         <CommentForm onCommentSubmit={this.handleCommentSubmit} />
