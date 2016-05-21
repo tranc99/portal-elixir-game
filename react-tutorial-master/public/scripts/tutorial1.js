@@ -90,9 +90,18 @@ var CommentBox = React.createClass({
   },
   handleCommentSubmit: function(data) {
     $.ajax({
-      url: "/api/comments",
-      method: 'POST',
+      url: this.props.url,
+      dataType: 'json',
+      type: 'POST',
       data: data,
+      success: function(data) {
+        console.log("wawaweewa!");
+        console.log(data);
+        this.setState({data: data});
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
 
     });
   },
