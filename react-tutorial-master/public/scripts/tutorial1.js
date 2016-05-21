@@ -1,8 +1,7 @@
-var data = [
+var data2 = [
   {id: 1, author: "Ken Bruen", text: "That's how it was in Ireland, the good old days."},
   {id: 2, author: "Michael Faraday", text: "That's how we did it in the *Industrial Revolution*"}
 ];
-
 
 var Comment =  React.createClass({
   rawMarkup: function() {
@@ -42,11 +41,33 @@ var CommentList = React.createClass({
 });
 
 var CommentForm = React.createClass({
+  getInitialState: function() {
+    return {author: '', text: ''};
+  },
+  handleAuthorChange: function(e) {
+    this.setState({author: e.target.value});
+  },
+  handleTextChange: function(e) {
+    this.setState({text: e.target.value});
+  },
+  handleSubmit: function(e) {
+    alert("submitting ahaha");
+    e.preventDefault();
+    var author = this.state.author.trim();
+    var text = this.state.text.trim();
+    if (!text || !author) {
+      return;
+    }
+    // TODO: send request to the server     dgdfgdfgdf
+    this.setState({author: '', text: ''});
+  },
   render: function() {
     return (
-      <div className="commentForm">
-        Hello, world! I am a CommentForm.
-      </div>
+      <form className="commentForm" onSubmit={this.handleSubmit}>
+        <input type="text" placeholder="Your name"  value={this.state.author} onChange={this.handleAuthorChange} />
+        <input type="text" placeholder="Say something..." value={this.state.text} onChange={this.handleTextChange} />
+        <input type="submit" value="Post" />
+      </form>
     );
   }
 });
